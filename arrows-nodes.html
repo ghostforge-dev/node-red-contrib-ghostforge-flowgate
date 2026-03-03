@@ -1,0 +1,42 @@
+<style>
+    .red-ui-flow-node[type^="gf-arrow-"] rect.red-ui-flow-node { fill: #000 !important; width: 35px !important; height: 35px !important; stroke: #00BFFF !important; stroke-width: 3px !important; }
+    .red-ui-flow-node[type^="gf-arrow-"] g.red-ui-flow-node-label-group { display: none !important; }
+    .red-ui-flow-node[type^="gf-arrow-"] .red-ui-flow-node-icon-group { transform: translate(7px, 7px) !important; }
+    .red-ui-flow-node[type^="gf-arrow-"] .red-ui-flow-node-icon { color: #fff !important; fill: #fff !important; font-size: 20px !important; }
+</style>
+
+<script type="text/javascript">
+(function() {
+    var arrows = [
+        { type: "gf-arrow-up",    icon: "font-awesome/fa-arrow-up"    },
+        { type: "gf-arrow-down",  icon: "font-awesome/fa-arrow-down"  },
+        { type: "gf-arrow-left",  icon: "font-awesome/fa-arrow-left"  },
+        { type: "gf-arrow-right", icon: "font-awesome/fa-arrow-right" }
+    ];
+    arrows.forEach(function(a) {
+        RED.nodes.registerType(a.type, {
+            category:  "GhostForge",
+            color:     "#000",
+            showLabel: false,
+            defaults:  { name: { value: "" } },
+            inputs:    1,
+            outputs:   1,
+            icon:      a.icon,
+            label:     function() { return ""; }
+        });
+    });
+})();
+</script>
+
+<script type="text/html" data-template-name="gf-arrow-up">
+    <div class="form-tips"><b>GhostForge Arrow Up</b> — Visual routing node. Passes msg unchanged. Use to guide flow direction in complex layouts.</div>
+</script>
+<script type="text/html" data-template-name="gf-arrow-down">
+    <div class="form-tips"><b>GhostForge Arrow Down</b> — Visual routing node. Passes msg unchanged. Use to guide flow direction in complex layouts.</div>
+</script>
+<script type="text/html" data-template-name="gf-arrow-left">
+    <div class="form-tips"><b>GhostForge Arrow Left</b> — Visual routing node. Passes msg unchanged. Use to guide flow direction in complex layouts.</div>
+</script>
+<script type="text/html" data-template-name="gf-arrow-right">
+    <div class="form-tips"><b>GhostForge Arrow Right</b> — Visual routing node. Passes msg unchanged. Use to guide flow direction in complex layouts.</div>
+</script>
