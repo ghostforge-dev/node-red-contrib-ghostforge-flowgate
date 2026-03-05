@@ -34,13 +34,12 @@
         showLabel: false,
         defaults: {
             name:  { value: "" },
-            topic: { value: "api-call", required: true }
+            topic: { value: "api-call", required: true },
+            l:     { value: false }
         },
         inputs: 1, outputs: 1,
         icon:  "font-awesome/fa-lock",
         align: 'left',
-        label: function() { return " "; },
-        labelStyle: function() { return ""; }
     });
 
     RED.nodes.registerType('gf-gate-closer', {
@@ -50,13 +49,12 @@
         defaults: {
             name:  { value: "" },
             topic: { value: "api-call", required: true },
-            delay: { value: 4000, required: true, validate: RED.validators.number() }
+            delay: { value: 4000, required: true, validate: RED.validators.number() },
+            l:     { value: false }
         },
         inputs: 1, outputs: 1,
         icon:  "font-awesome/fa-unlock",
         align: 'right',
-        label: function() { return " "; },
-        labelStyle: function() { return ""; }
     });
 </script>
 
