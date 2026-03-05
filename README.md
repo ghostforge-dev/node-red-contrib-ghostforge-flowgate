@@ -1,6 +1,6 @@
-# node-red-contrib-ghostforge-arrows
+# node-red-contrib-ghostforge-flowgate
 
-**GhostForge™ Arrows** — Visual flow routing nodes for Node-RED.
+**GhostForge™ FlowGate** — API call queue and rate limiting for Node-RED.
 
 Part of the [GhostForge™](https://github.com/ghostforge) Node-RED toolkit.
 
@@ -8,49 +8,49 @@ Part of the [GhostForge™](https://github.com/ghostforge) Node-RED toolkit.
 
 ## What it does
 
-Four directional arrow nodes that pass messages unchanged and serve as visual guides in complex Node-RED flows:
+Two nodes that work as a pair to serialize API calls and prevent rate limit errors:
 
-- **gf-arrow-up** ↑
-- **gf-arrow-down** ↓
-- **gf-arrow-left** ←
-- **gf-arrow-right** →
+**gf-gate-opener** — Passes the message through when the gate is free. If the gate is already open (an API call is in progress), the message is queued and waits automatically.
+
+**gf-gate-closer** — Placed after your API response handler. Waits a configurable delay, then releases the gate. If messages are queued, the next one fires automatically.
 
 ---
 
 ## Design philosophy
 
-Node-RED flows can become visually complex with many crossing wires. Arrow nodes give you a way to indicate flow direction explicitly - making flows readable at a glance without relying on wire routing alone.
-
-All arrow nodes are minimal: black background, white icon, no label. They blend naturally into the GhostForge™ node family.
+- **Zero message loss** — All messages are queued, never dropped
+- **Configurable delay** — Fine-tune the release timing to match your API rate limits
+- **Topic-based** — Multiple independent gates can run in parallel using different topics
+- **Self-healing** — Gate resets to free on Node-RED restart
 
 ---
 
 ## Installation
 
-Via Node-RED Palette Manager: search for `ghostforge-arrows`
+Via Node-RED Palette Manager: search for `ghostforge-flowgate`
 
 Or via npm:
 ```bash
-npm install node-red-contrib-ghostforge-arrows
+npm install node-red-contrib-ghostforge-flowgate
 ```
 
 ---
 
 ## Usage
 
-Drop an arrow node anywhere in your flow to visually indicate direction. Wire it in-line like any other node - it simply passes `msg` through unchanged.
+```
+[incoming msg] → [gf-gate-opener] → [API call] → [response handler] → [gf-gate-closer]
+```
 
-```
-[node A] → [gf-arrow-down] → [node B]
-```
+Set the same **Topic** on both Opener and Closer. The Opener uses global context to track gate state, so it works across subflows and tabs.
 
 ---
 
 ## Part of the GhostForge™ toolkit
 
 - **ghostforge-vaultkey** — JIT auth & secret burning
-- **ghostforge-flowgate** — API call queue & rate limiting
-- **ghostforge-arrows** — Visual flow routing nodes (this package)
+- **ghostforge-flowgate** — API call queue & rate limiting (this package)
+- **ghostforge-arrows** — Visual flow routing nodes
 
 ---
 

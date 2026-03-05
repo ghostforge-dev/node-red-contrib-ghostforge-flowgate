@@ -1,60 +1,32 @@
-<style>
-    .red-ui-flow-node[type="gf-gate-opener"] rect.red-ui-flow-node-background,
-    .red-ui-flow-node[type="gf-gate-closer"] rect.red-ui-flow-node-background {
-        fill: #000 !important;
-        stroke-width: 3px !important;
-    }
-    .red-ui-flow-node[type="gf-gate-opener"] rect.red-ui-flow-node-background { stroke: #FF6B35 !important; }
-    .red-ui-flow-node[type="gf-gate-closer"] rect.red-ui-flow-node-background { stroke: #2ECC71 !important; }
-
-    .red-ui-flow-node[type="gf-gate-opener"] .red-ui-flow-node-label-group,
-    .red-ui-flow-node[type="gf-gate-closer"] .red-ui-flow-node-label-group,
-    .red-ui-flow-node[type="gf-gate-opener"] text.red-ui-flow-node-label,
-    .red-ui-flow-node[type="gf-gate-closer"] text.red-ui-flow-node-label {
-        display: none !important;
-        visibility: hidden !important;
-        opacity: 0 !important;
-    }
-    .red-ui-flow-node[type="gf-gate-opener"] .red-ui-flow-node-icon-group,
-    .red-ui-flow-node[type="gf-gate-closer"] .red-ui-flow-node-icon-group {
-        transform: translate(7px, 7px) !important;
-    }
-    .red-ui-flow-node[type="gf-gate-opener"] .red-ui-flow-node-icon,
-    .red-ui-flow-node[type="gf-gate-closer"] .red-ui-flow-node-icon {
-        color: #fff !important;
-        fill: #fff !important;
-        font-size: 20px !important;
-    }
-</style>
-
 <script type="text/javascript">
     RED.nodes.registerType('gf-gate-opener', {
         category:  'GhostForge',
-        color:     '#000',
+        color:     '#000000',
         showLabel: false,
         defaults: {
             name:  { value: "" },
-            topic: { value: "api-call", required: true },
-            l:     { value: false }
+            topic: { value: "api-call", required: true }
         },
-        inputs: 1, outputs: 1,
-        icon:  "font-awesome/fa-lock",
-        align: 'left',
+        inputs:  1,
+        outputs: 1,
+        icon:    "gate-opener.svg",
+        label:   function() { return this.name || "gate-opener"; }
     });
 
     RED.nodes.registerType('gf-gate-closer', {
         category:  'GhostForge',
-        color:     '#000',
+        color:     '#000000',
         showLabel: false,
         defaults: {
             name:  { value: "" },
             topic: { value: "api-call", required: true },
-            delay: { value: 4000, required: true, validate: RED.validators.number() },
-            l:     { value: false }
+            delay: { value: 4000, required: true, validate: RED.validators.number() }
         },
-        inputs: 1, outputs: 1,
-        icon:  "font-awesome/fa-unlock",
-        align: 'right',
+        inputs:  1,
+        outputs: 1,
+        align:   'right',
+        icon:    "gate-closer.svg",
+        label:   function() { return this.name || "gate-closer"; }
     });
 </script>
 
@@ -80,39 +52,24 @@
 
 <script type="text/html" data-help-name="gf-gate-opener">
     <p>Serializes API calls by queuing messages when a gate is already open.</p>
-    <h3>How it works</h3>
-    <p>When a message arrives and the gate is <strong>free</strong>, it passes through immediately and opens the gate. If the gate is already <strong>open</strong>, the message is queued and waits until the matching <code>gf-gate-closer</code> releases it.</p>
     <h3>Configuration</h3>
     <dl class="message-properties">
         <dt>Topic <span class="property-type">string</span></dt>
-        <dd>A unique name for this gate. Must match the Topic on the paired <code>gf-gate-closer</code>. Use different topics to run multiple independent gates in parallel.</dd>
+        <dd>Unique gate name. Must match the paired <code>gf-gate-closer</code>.</dd>
     </dl>
     <h3>Usage</h3>
     <pre>[msg] → [gf-gate-opener] → [API call] → [gf-gate-closer]</pre>
-    <h3>Notes</h3>
-    <ul>
-        <li>Gate state is stored in global context — works across tabs and subflows</li>
-        <li>All messages are queued, never dropped</li>
-        <li>Gate resets to free on Node-RED restart</li>
-    </ul>
     <p>Part of the <strong>GhostForge™</strong> toolkit.</p>
 </script>
 
 <script type="text/html" data-help-name="gf-gate-closer">
-    <p>Releases the FlowGate after an API call completes, firing the next queued message.</p>
-    <h3>How it works</h3>
-    <p>After a configurable delay, the gate is released. If messages are waiting in the queue, the next one is automatically forwarded through the paired <code>gf-gate-opener</code>.</p>
+    <p>Releases the FlowGate after an API call completes.</p>
     <h3>Configuration</h3>
     <dl class="message-properties">
         <dt>Topic <span class="property-type">string</span></dt>
-        <dd>Must match the Topic on the paired <code>gf-gate-opener</code>.</dd>
+        <dd>Must match the paired <code>gf-gate-opener</code>.</dd>
         <dt>Delay <span class="property-type">number (ms)</span></dt>
-        <dd>Milliseconds to wait before releasing the gate. Use this to respect API rate limits. Default: 4000ms.</dd>
+        <dd>Milliseconds to wait before releasing. Default: 4000ms.</dd>
     </dl>
-    <h3>Notes</h3>
-    <ul>
-        <li>Place this node after your last response handler, not directly after the API call</li>
-        <li>The outgoing message continues downstream after the gate is released</li>
-    </ul>
     <p>Part of the <strong>GhostForge™</strong> toolkit.</p>
 </script>
